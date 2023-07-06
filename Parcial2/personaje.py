@@ -28,9 +28,9 @@ class Jugador(pygame.sprite.Sprite):
         se dispara el laser 
         """
         keys = pygame.key.get_pressed()
-        if keys[pygame.K_d]:
+        if keys[pygame.K_RIGHT]:
             self.rect.x += self.velocidad
-        elif keys[pygame.K_a]:
+        elif keys[pygame.K_LEFT]:
             self.rect.x -= self.velocidad
             
         if keys[pygame.K_SPACE] and self.preparado:

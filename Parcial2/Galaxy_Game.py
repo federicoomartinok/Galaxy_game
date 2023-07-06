@@ -17,20 +17,40 @@ class Juego:
         self.vidas = 3
         self.superficie_vidas = pygame.image.load('nave2.png').convert_alpha()
         self.posicion_x_vidas = ANCHO - (self.superficie_vidas.get_size()[0] * 2 + 20)
-
         self.score = 0
         self.fuente = pygame.font.Font(r'E:\LABORATORIO_1_PYTHON\Laboratorio_1_Pyhton\Laboratorio_1_Pyhton\Ejercicios_Python\Parcial2\fuenteretro.ttf',20)
         self.segaFont = pygame.font.Font(r'E:\LABORATORIO_1_PYTHON\Laboratorio_1_Pyhton\Laboratorio_1_Pyhton\Ejercicios_Python\Parcial2\SEGA.ttf',20)
-
         self.game_over = False
         self.flag_input = False
-
         self.texto_usuario = ''
 
         """self.ruta = 'E:\LABORATORIO_1_PYTHON\Laboratorio_1_Pyhton\Laboratorio_1_Pyhton\Ejercicios_Python\Parcial2'"""
         self.ruta = r'E:\LABORATORIO_1_PYTHON\Laboratorio_1_Pyhton\Laboratorio_1_Pyhton\Ejercicios_Python\Parcial2\tabla.db'
 
+    def display_vidas(self):
+        for vida in range(self.vidas - 1):
+            #calcula la posición horizontal en la que se dibujarán las vidas del jugador
+            x = self.posicion_x_vidas + (vida * (self.superficie_vidas.get_size()[0] + 10))
+            pantalla.blit(self.superficie_vidas,(x,8))
 
+    def display_score(self):
+        """
+        Muestra el score arriba a la izquierda
+        """
+        superficie_score = self.fuente.render('Score:{0}'.format(self.score),False,colores.RED2)
+        rect_score = superficie_score.get_rect(topleft =(10,10))
+        pantalla.blit(superficie_score,rect_score)
+        
+    def start(self):
+        """
+        Ejecuta el funcionamiento del juego
+        """
+        self.jugador.update()
+        self.jugador.sprite.lasers.draw(pantalla)
+        self.jugador.draw(pantalla)
+        self.colisiones()
+        self.display_vidas()
+        self.display_score()
 
     def colisiones(self):
         """
@@ -57,29 +77,6 @@ class Juego:
                             if juego.score > 0:
                                 guardar_score(juego.ruta,juego.texto_usuario,juego.score)
                                 juego.texto_usuario = ''
-
-
-    def display_vidas(self):
-        for vida in range(self.vidas - 1):
-            x = self.posicion_x_vidas + (vida * (self.superficie_vidas.get_size()[0] + 10))
-            pantalla.blit(self.superficie_vidas,(x,8))
-
-    def display_score(self):
-        """
-        Muestra el score arriba a la izquierda
-        """
-        superficie_score = self.fuente.render('Score:{0}'.format(self.score),False,colores.RED2)
-        rect_score = superficie_score.get_rect(topleft =(10,10))
-        pantalla.blit(superficie_score,rect_score)
-        
-    def correr(self):
-        self.jugador.update()
-        self.jugador.sprite.lasers.draw(pantalla)
-        self.jugador.draw(pantalla)
-        self.colisiones()
-        self.display_vidas()
-        self.display_score()
-        
 
 if __name__ == '__main__':
     """
@@ -182,7 +179,7 @@ if __name__ == '__main__':
             pantalla.blit(imagen_space, imagen_space.get_rect())
             lista_asteroide.draw(pantalla)    
             lista_asteroide.update()
-            juego.correr()
+            juego.start()
             
             if len(lista_asteroide) == 0:
                 juego.game_over = True
